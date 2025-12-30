@@ -15,6 +15,7 @@ public abstract class BaseClient {
         this.spec = new RequestSpecBuilder()
                 .setBaseUri(config.baseUrl())
                 .setContentType("application/json")
+                .setAccept("application/json")
                 .addFilter(new AllureRestAssured())
                 .build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();

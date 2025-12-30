@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class AuthSmokeTest extends BaseTest {
 
     @Test
-    void login_ShouldReturnAccessAndRefreshToken() {
+    void login_shouldReturnAccessAndRefreshToken() {
         AuthClient auth = new AuthClient(config);
         AuthToken token = auth.loginWithDefaultUser();
         AuthAsserts.assertValidTokens(token);

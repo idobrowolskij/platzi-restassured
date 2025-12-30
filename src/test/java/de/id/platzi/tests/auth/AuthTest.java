@@ -25,7 +25,7 @@ public class AuthTest extends BaseTest {
     void login_shouldNotReturnAccessAndRefreshTokenOnInvalidCredentials() {
         Response res = authClient.loginRaw(new LoginRequest("test@test.com", "wrongpassword123"));
 
-        assertEquals(401, res.statusCode(), "expected 401 but was " + res.statusCode());
+        assertEquals(401, res.statusCode(), "Expected 401 but was " + res.statusCode());
         assertNull(res.jsonPath().getString("access_token"));
         assertNull(res.jsonPath().getString("refresh_token"));
     }
@@ -40,7 +40,7 @@ public class AuthTest extends BaseTest {
     @Test
     void profile_shouldNotReturnProfileOnInvalidToken() {
         Response res = authClient.getProfileRaw(new AuthToken("123wrongtoken", "123wrongrefreshtoken"));
-        assertEquals(401, res.statusCode(), "expected 401 but was " + res.statusCode());
+        assertEquals(401, res.statusCode(), "Expected 401 but was " + res.statusCode());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class AuthTest extends BaseTest {
     void refreshToken_shouldNotReturnNewTokensOnInvalidRefreshToken() {
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest("123invalidtoken");
         Response res = authClient.getRefreshTokenRaw(refreshTokenRequest);
-        assertEquals(401, res.statusCode(), "expected 401 but was " + res.statusCode());
+        assertEquals(401, res.statusCode(), "Expected 401 but was " + res.statusCode());
     }
 
 }

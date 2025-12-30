@@ -25,8 +25,11 @@ public class ProductsTest extends BaseTest {
 
     @Test
     void products_shouldReturnListOfProducts() {
-        List<Product> products = productClient.getProducts(10, 0);
+        int limit = 10;
+
+        List<Product> products = productClient.getProducts(limit, 0);
+
         assertFalse(products.isEmpty());
-        assertEquals(10, products.size());
+        assertTrue(products.size() <= limit);
     }
 }

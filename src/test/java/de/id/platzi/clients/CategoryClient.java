@@ -17,11 +17,7 @@ public class CategoryClient extends BaseClient {
 
     public List<Category> getCategories(int limit) {
         Response res = getCategoriesRaw(limit);
-
-        int code = res.statusCode();
-        if (code != 200) {
-            throw new AssertionError("Expected 200 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(200, res);
         return res.jsonPath().getList(".", Category.class);
     }
 }

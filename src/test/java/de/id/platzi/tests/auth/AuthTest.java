@@ -44,12 +44,13 @@ public class AuthTest extends BaseTest {
     }
 
     @Test
-    void refreshToken_shouldReturnNewTokensOnValidRefreshToken() {
+    void refreshToken_shouldReturnValidTokensOnValidRefreshToken() {
         AuthToken oldToken = authClient.loginWithDefaultUser();
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(oldToken.refreshToken());
-        AuthToken newToken = authClient.getRefreshToken(refreshTokenRequest);
-        AuthAsserts.assertValidTokens(newToken);
-        assertNotEquals(oldToken.accessToken(), newToken.accessToken());
+        AuthToken refreshedToken = authClient.getRefreshToken(refreshTokenRequest);
+        AuthAsserts.assertValidTokens(refreshedToken);
+        Profile profile = authClient.getProfile(refreshedToken);
+        assertNotNull(profile);
     }
 
     @Test

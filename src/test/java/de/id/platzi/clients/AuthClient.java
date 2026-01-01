@@ -23,10 +23,7 @@ public final class AuthClient extends BaseClient {
 
     public AuthToken login(LoginRequest request) {
         Response res = loginRaw(request);
-        int code = res.statusCode();
-        if (code != 201) {
-            throw new AssertionError("Expected 201 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(201, res);
         return res.as(AuthToken.class);
     }
 
@@ -42,11 +39,7 @@ public final class AuthClient extends BaseClient {
 
     public Profile getProfile(AuthToken token) {
         Response res = getProfileRaw(token);
-
-        int code = res.statusCode();
-        if (code != 200) {
-            throw new AssertionError("Expected 200 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(200, res);
         return res.as(Profile.class);
     }
 
@@ -58,11 +51,7 @@ public final class AuthClient extends BaseClient {
 
     public AuthToken getRefreshToken(RefreshTokenRequest refreshTokenRequest) {
         Response res = getRefreshTokenRaw(refreshTokenRequest);
-
-        int code = res.statusCode();
-        if (code != 201) {
-            throw new AssertionError("Expected 201 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(201, res);
         return res.as(AuthToken.class);
     }
 }

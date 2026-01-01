@@ -20,11 +20,7 @@ public final class ProductClient extends BaseClient {
 
     public List<Product> getProducts(int limit, int offset) {
         Response res = getProductsRaw(limit, offset);
-
-        int code = res.statusCode();
-        if (code != 200) {
-            throw new AssertionError("Expected 200 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(200, res);
         return res.jsonPath().getList(".", Product.class);
     }
 
@@ -36,11 +32,7 @@ public final class ProductClient extends BaseClient {
 
     public Product getProductById(Long id) {
         Response res = getProductByIdRaw(id);
-
-        int code = res.statusCode();
-        if (code != 200) {
-            throw new AssertionError("Expected 200 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(200, res);
         return res.as(Product.class);
     }
 
@@ -52,11 +44,7 @@ public final class ProductClient extends BaseClient {
 
     public Product createProduct(ProductRequest product) {
         Response res = createProductRaw(product);
-
-        int code = res.statusCode();
-        if (code != 201) {
-            throw new AssertionError("Expected 201 but was " + code + ". Body: " + res.asString());
-        }
+        checkStatusCode(201, res);
         return res.as(Product.class);
     }
 }

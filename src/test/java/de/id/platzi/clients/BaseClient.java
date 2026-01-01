@@ -4,6 +4,7 @@ import de.id.platzi.config.Config;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public abstract class BaseClient {
@@ -23,5 +24,12 @@ public abstract class BaseClient {
 
     protected RequestSpecification req() {
         return RestAssured.given().spec(spec);
+    }
+
+    protected void checkStatusCode(int expected, Response res) {
+        int code = res.statusCode();
+        if (code != expected) {
+            throw new AssertionError("Expected " + expected + " but was " + code + ". Body: " + res.asString());
+        }
     }
 }

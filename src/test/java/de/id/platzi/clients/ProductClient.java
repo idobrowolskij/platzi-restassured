@@ -47,4 +47,29 @@ public final class ProductClient extends BaseClient {
         checkStatusCode(201, res);
         return res.as(Product.class);
     }
+
+    public Response updateProductRaw(Product product) {
+        return req()
+                .body(product)
+                .pathParam("id", product.id())
+                .put("/products/{id}");
+    }
+
+    public Product updateProduct(Product product) {
+        Response res = updateProductRaw(product);
+        checkStatusCode(200, res);
+        return res.as(Product.class);
+    }
+
+    public Response deleteProductRaw(Product product) {
+        return req()
+                .pathParam("id", product.id())
+                .delete("/products/{id}");
+    }
+
+    public Response deleteProduct(Product product) {
+        Response res = deleteProductRaw(product);
+        checkStatusCode(200, res);
+        return res;
+    }
 }

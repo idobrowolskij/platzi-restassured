@@ -5,7 +5,8 @@ import de.id.platzi.assertions.ProductAsserts;
 import de.id.platzi.base.BaseTest;
 import de.id.platzi.clients.CategoryClient;
 import de.id.platzi.clients.ProductClient;
-import de.id.platzi.models.request.ProductRequest;
+import de.id.platzi.models.request.CreateProductRequest;
+import de.id.platzi.models.request.UpdateProductRequest;
 import de.id.platzi.models.response.Category;
 import de.id.platzi.models.response.Product;
 import io.restassured.response.Response;
@@ -44,18 +45,18 @@ public class ProductsTest extends BaseTest {
     void getProductById_shouldReturnCreatedProduct() {
         List<Category> categories = categoryClient.getCategories(5);
         String u = UUID.randomUUID().toString().substring(0,8);
-        ProductRequest productRequest = new ProductRequest(
+        CreateProductRequest createProductRequest = new CreateProductRequest(
           "Test-" + u,
                 new BigDecimal(100),
                 "Test Description",
                 categories.get(0).id(),
                 List.of("https://i.imgur.com/cSytoSD.jpeg")
         );
-        Product created = productClient.createProduct(productRequest);
+        Product created = productClient.createProduct(createProductRequest);
         Product fetched = productClient.getProductById(created.id());
 
         assertEquals(created.id(), fetched.id());
-        assertEquals(productRequest.title(), fetched.title());
+        assertEquals(createProductRequest.title(), fetched.title());
         ProductAsserts.assertValidProduct(fetched);
     }
 
@@ -63,14 +64,14 @@ public class ProductsTest extends BaseTest {
     void product_shouldNotBeCreatedWithInvalidPayload() {
         String u = UUID.randomUUID().toString().substring(0,8);
         // invalid category, empty images urls
-        ProductRequest productRequest = new ProductRequest(
+        CreateProductRequest createProductRequest = new CreateProductRequest(
                 "Test-" + u,
                 new BigDecimal(50),
                 "Test",
                 50000L,
                 List.of("")
         );
-        Response res = productClient.createProductRaw(productRequest);
+        Response res = productClient.createProductRaw(createProductRequest);
         assertEquals(400, res.statusCode());
     }
 
@@ -85,7 +86,7 @@ public class ProductsTest extends BaseTest {
         Long categoryId = categoryClient.getCategories(5).get(0).id();
         String u = UUID.randomUUID().toString().substring(0,8);
 
-        Product created = productClient.createProduct(new ProductRequest(
+        Product created = productClient.createProduct(new CreateProductRequest(
                 "Test-" + u,
                 new BigDecimal(100),
                 "Test",
@@ -93,16 +94,12 @@ public class ProductsTest extends BaseTest {
                 List.of("https://i.imgur.com/cSytoSD.jpeg")));
 
         String newTitle = "Updated-" + u;
-        Product updated = productClient.updateProduct(new Product(
-                created.id(),
+        Product updated = productClient.updateProduct(new UpdateProductRequest(
                 newTitle,
-                created.slug(),
                 created.price(),
                 created.description(),
-                created.category(),
-                created.images(),
-                created.creationAt(),
-                created.updatedAt()));
+                created.category().id(),
+                created.images()), created.id());
 
         assertEquals(created.id(), updated.id());
         assertEquals(newTitle, updated.title());
@@ -114,14 +111,14 @@ public class ProductsTest extends BaseTest {
         Long categoryId = categoryClient.getCategories(5).get(0).id();
         String u = UUID.randomUUID().toString().substring(0, 8);
 
-        Product created = productClient.createProduct(new ProductRequest(
+        Product created = productClient.createProduct(new CreateProductRequest(
                 "Test" + u,
                 new BigDecimal(100),
                 "Test", categoryId,
                 List.of("https://i.imgur.com/cSytoSD.jpeg")
         ));
 
-        Response del = productClient.deleteProductRaw(created);
+        Response del = productClient.deleteProductRaw(created.id());
         assertEquals(200, del.statusCode());
 
         Response get = productClient.getProductByIdRaw(created.id());

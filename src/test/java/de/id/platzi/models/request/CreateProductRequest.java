@@ -3,7 +3,7 @@ package de.id.platzi.models.request;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record ProductRequest(
+public record CreateProductRequest(
         String title,
         BigDecimal price,
         String description,

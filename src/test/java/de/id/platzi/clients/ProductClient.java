@@ -1,7 +1,8 @@
 package de.id.platzi.clients;
 
 import de.id.platzi.config.Config;
-import de.id.platzi.models.request.ProductRequest;
+import de.id.platzi.models.request.CreateProductRequest;
+import de.id.platzi.models.request.UpdateProductRequest;
 import de.id.platzi.models.response.Product;
 import io.restassured.response.Response;
 
@@ -36,39 +37,39 @@ public final class ProductClient extends BaseClient {
         return res.as(Product.class);
     }
 
-    public Response createProductRaw(ProductRequest product) {
+    public Response createProductRaw(CreateProductRequest product) {
         return req()
                 .body(product)
                 .post("/products");
     }
 
-    public Product createProduct(ProductRequest product) {
+    public Product createProduct(CreateProductRequest product) {
         Response res = createProductRaw(product);
         checkStatusCode(201, res);
         return res.as(Product.class);
     }
 
-    public Response updateProductRaw(Product product) {
+    public Response updateProductRaw(UpdateProductRequest product, Long id) {
         return req()
                 .body(product)
-                .pathParam("id", product.id())
+                .pathParam("id", id)
                 .put("/products/{id}");
     }
 
-    public Product updateProduct(Product product) {
-        Response res = updateProductRaw(product);
+    public Product updateProduct(UpdateProductRequest product, Long id) {
+        Response res = updateProductRaw(product, id);
         checkStatusCode(200, res);
         return res.as(Product.class);
     }
 
-    public Response deleteProductRaw(Product product) {
+    public Response deleteProductRaw(Long id) {
         return req()
-                .pathParam("id", product.id())
+                .pathParam("id", id)
                 .delete("/products/{id}");
     }
 
-    public Response deleteProduct(Product product) {
-        Response res = deleteProductRaw(product);
+    public Response deleteProduct(Long id) {
+        Response res = deleteProductRaw(id);
         checkStatusCode(200, res);
         return res;
     }
